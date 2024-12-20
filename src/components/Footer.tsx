@@ -22,8 +22,9 @@ export const Footer = () => {
           <div>
             <a
               rel="noreferrer noopener"
-              href="#"
+              href="https://www.instagram.com/sport.bro/"
               className="opacity-60 hover:opacity-100"
+              target="_blank"
             >
               Instagram
             </a>
@@ -32,8 +33,9 @@ export const Footer = () => {
           <div>
             <a
               rel="noreferrer noopener"
-              href="#"
+              href="https://www.facebook.com/sport.broeventos/"
               className="opacity-60 hover:opacity-100"
+              target="_blank"
             >
               Facebook
             </a>
@@ -78,7 +80,7 @@ export const Footer = () => {
           <div>
             <a
               rel="noreferrer noopener"
-              href="#"
+              href="/sobre-nos"
               className="opacity-60 hover:opacity-100"
             >
               Sobre a BRO
@@ -88,7 +90,7 @@ export const Footer = () => {
           <div>
             <a
               rel="noreferrer noopener"
-              href="#"
+              href="/politica-privacidade"
               className="opacity-60 hover:opacity-100"
             >
               Política de privacidade
@@ -98,7 +100,7 @@ export const Footer = () => {
           <div>
             <a
               rel="noreferrer noopener"
-              href="#"
+              href="/termos-de-compra"
               className="opacity-60 hover:opacity-100"
             >
               Termos de Compra

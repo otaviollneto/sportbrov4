@@ -20,6 +20,7 @@ interface EventProps {
   descricao: string;
   img: string;
   data_ini: string;
+  categoria: string;
   organizador: {
     nome: string;
     telefone: string;
@@ -77,39 +78,44 @@ export const Features = ({ status = 2 }: FeaturesProps) => {
       </h2>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {events.map(({ id, titulo, slug, img, data_ini, organizador }) => (
-          <Card key={id} className="hover:shadow-lg transition-shadow">
-            <CardHeader
-              onClick={() => handleNavigate(slug)}
-              className="cursor-pointer"
-            >
-              <img
-                src={`https://sportbro.com.br/sportbro/evento_img/${img}`}
-                alt={titulo}
-                className="w-[200px] lg:w-[300px] mx-auto"
-              />
-            </CardHeader>
+        {events.map(
+          ({ id, titulo, slug, img, data_ini, organizador, categoria }) => (
+            <Card key={id} className="hover:shadow-lg transition-shadow">
+              <CardHeader
+                onClick={() => handleNavigate(slug)}
+                className="cursor-pointer"
+              >
+                <img
+                  src={`https://sportbro.com.br/sportbro/evento_img/${img}`}
+                  alt={titulo}
+                  className="w-[200px] lg:w-[300px] mx-auto"
+                />
+              </CardHeader>
 
-            <CardContent className="space-y-4">
-              <CardTitle>{titulo}</CardTitle>
-              <CardDescription className="space-y-2">
-                <Badge>
-                  <strong>Data:</strong> {data_ini || "--"}
-                </Badge>
-                <p>
-                  <strong>Organizador:</strong> {organizador?.nome || "--"}
-                </p>
-              </CardDescription>
-            </CardContent>
+              <CardContent className="space-y-4">
+                <CardTitle>{titulo}</CardTitle>
+                <CardDescription className="space-y-2">
+                  <Badge>
+                    <strong>Data:</strong> {data_ini || "--"}
+                  </Badge>
+                  <Badge className="w-60 flex justify-center text-base bg-orange-500 text-white">
+                    <strong>{categoria || "--"}</strong>
+                  </Badge>
+                  <p>
+                    <strong>Organizador:</strong> {organizador?.nome || "--"}
+                  </p>
+                </CardDescription>
+              </CardContent>
 
-            <CardFooter>
-              <Button onClick={() => handleNavigate(slug)} className="w-full">
-                <Check className="mr-2" />{" "}
-                {status === 2 ? "Inscrever" : "Ver resultado"}
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+              <CardFooter>
+                <Button onClick={() => handleNavigate(slug)} className="w-full">
+                  <Check className="mr-2" />{" "}
+                  {status === 2 ? "Inscrever" : "Ver resultado"}
+                </Button>
+              </CardFooter>
+            </Card>
+          )
+        )}
       </div>
     </section>
   );
