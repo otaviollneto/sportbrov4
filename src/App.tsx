@@ -1,40 +1,45 @@
-import { About } from "./components/About";
-import { Cta } from "./components/Cta";
-import { FAQ } from "./components/FAQ";
-import { Features } from "./components/Features";
-import { Footer } from "./components/Footer";
-import { Hero } from "./components/Hero";
-import { HowItWorks } from "./components/HowItWorks";
-import { Navbar } from "./components/Navbar";
-import { Newsletter } from "./components/Newsletter";
-import { Pricing } from "./components/Pricing";
-import { ScrollToTop } from "./components/ScrollToTop";
-import { Services } from "./components/Services";
-import { Sponsors } from "./components/Sponsors";
-import { Team } from "./components/Team";
-import { Testimonials } from "./components/Testimonials";
-import "./App.css";
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
 
-function App() {
-  return (
+import Eventos from "./pages/Eventos";
+import Home from "./pages/Home";
+import EventoDetalhado from "./pages/EventoDetalhado";
+import Resultados from "./pages/Resultados";
+import ResultadoDetalhado from "./pages/ResultadoDetalhado";
+
+export const router = createBrowserRouter(
+  createRoutesFromElements(
     <>
-      <Navbar />
-      <Hero />
-      <Sponsors />
-      <About />
-      <HowItWorks />
-      <Features />
-      <Services />
-      <Cta />
-      <Testimonials />
-      <Team />
-      <Pricing />
-      <Newsletter />
-      <FAQ />
-      <Footer />
-      <ScrollToTop />
+      <Route path="/home" element={<Home />} />
+      <Route path="/">
+        <Route index element={<Home />} />
+        <Route path="eventos" handle={{ title: "Eventos" }}>
+          <Route index element={<Eventos />} />
+          <Route
+            path=":slug"
+            handle={{ title: "Detalhes do Evento" }}
+            element={<EventoDetalhado />}
+          />
+        </Route>
+        <Route path="resultados" handle={{ title: "Resultados" }}>
+          <Route index element={<Resultados />} />
+          <Route
+            path=":slug"
+            handle={{ title: "Detalhes do Evento" }}
+            element={<ResultadoDetalhado />}
+          />
+        </Route>
+      </Route>
     </>
-  );
-}
+  )
+);
+
+const App = () => {
+  return <RouterProvider router={router} />;
+};
 
 export default App;

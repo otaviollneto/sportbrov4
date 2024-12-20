@@ -10,19 +10,25 @@ interface ServiceProps {
 
 const serviceList: ServiceProps[] = [
   {
-    title: "Code Collaboration",
+    title: "Gestão de Eventos Esportivos",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.",
     icon: <ChartIcon />,
   },
   {
-    title: "Project Management",
+    title: "Cronometragem",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.",
     icon: <WalletIcon />,
   },
   {
-    title: "Task Automation",
+    title: "Inscrição Online",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.",
+    icon: <MagnifierIcon />,
+  },
+  {
+    title: "Equipamento para seu evento",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.",
     icon: <MagnifierIcon />,
@@ -36,9 +42,9 @@ export const Services = () => {
         <div>
           <h2 className="text-3xl md:text-4xl font-bold">
             <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
-              Client-Centric{" "}
+              Nossos{" "}
             </span>
-            Services
+            Serviços
           </h2>
 
           <p className="text-muted-foreground text-xl mt-4 mb-8 ">
