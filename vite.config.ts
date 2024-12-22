@@ -9,4 +9,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://sportbro.com.br",
+        changeOrigin: true,
+        secure: false, // Aceita certificados SSL autoassinados
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });

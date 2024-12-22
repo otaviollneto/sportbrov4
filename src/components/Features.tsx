@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -12,62 +10,75 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface EventProps {
-  id: string;
-  titulo: string;
-  slug: string;
-  descricao: string;
-  img: string;
-  data_ini: string;
-  categoria: string;
-  organizador: {
-    nome: string;
-    telefone: string;
-  };
-}
+// Hooks personalizados
+import { useFetchEvents } from "@/hooks/useFetchEvents";
+import { usePagination } from "@/hooks/usePagination";
 
-interface FeaturesProps {
-  status?: number;
-}
+// Tipos
+import { EventProps, FeaturesProps } from "@/types";
 
 export const Features = ({ status = 2 }: FeaturesProps) => {
-  const [events, setEvents] = useState<EventProps[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get(
-          `https://sportbro.com.br/api/events_list.php?status=${status}`
-        );
-        console.log(response);
-        setEvents(response.data.evento);
-      } catch (err) {
-        console.error(err);
-        setError("Erro ao carregar eventos.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Paginação
+  const { page, handlePageChange, getVisiblePages } = usePagination(10);
 
-    fetchEvents();
-  }, [status]);
+  // Buscar eventos
+  const { data, isLoading, isError } = useFetchEvents({ status, page });
+  const events = data?.evento || [];
+  const totalPages = data?.total_paginas || 1;
 
+  // Navegar para a página do evento
   const handleNavigate = (slug: string) => {
     navigate(`/${status === 2 ? "eventos" : "resultados"}/${slug}`);
   };
 
-  if (loading) {
-    return <p className="text-center">Carregando...</p>;
+  // Skeleton enquanto carrega
+  if (isLoading) {
+    return (
+      <section className="container py-24 sm:py-32 space-y-8">
+        <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
+          Carregando Eventos...
+        </h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Card key={index} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <Skeleton className="w-[200px] lg:w-[300px] h-[180px] mx-auto" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-1/2" />
+              </CardContent>
+              <CardFooter>
+                <Skeleton className="w-full h-10" />
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </section>
+    );
   }
 
-  if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
+  // Exibir erro
+  if (isError) {
+    return (
+      <p className="text-center text-red-500">Erro ao carregar eventos.</p>
+    );
   }
 
+  // Renderiza os eventos
   return (
     <section id="features" className="container py-24 sm:py-32 space-y-8">
       <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
@@ -79,14 +90,22 @@ export const Features = ({ status = 2 }: FeaturesProps) => {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {events.map(
-          ({ id, titulo, slug, img, data_ini, organizador, categoria }) => (
+          ({
+            id,
+            titulo,
+            slug,
+            img,
+            data_ini,
+            organizador,
+            categoria,
+          }: EventProps) => (
             <Card key={id} className="hover:shadow-lg transition-shadow">
               <CardHeader
                 onClick={() => handleNavigate(slug)}
                 className="cursor-pointer"
               >
                 <img
-                  src={`https://sportbro.com.br/sportbro/evento_img/${img}`}
+                  src={img}
                   alt={titulo}
                   className="w-[200px] lg:w-[300px] mx-auto"
                 />
@@ -117,6 +136,38 @@ export const Features = ({ status = 2 }: FeaturesProps) => {
           )
         )}
       </div>
+
+      {/* Paginação */}
+      {status === 3 && (
+        <div className="mt-8 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              {page > 1 && (
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => handlePageChange(page - 1)}
+                  />
+                </PaginationItem>
+              )}
+              {getVisiblePages().map((p) => (
+                <PaginationItem key={p}>
+                  <PaginationLink
+                    onClick={() => handlePageChange(p)}
+                    isActive={p === page}
+                  >
+                    {p}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              {page < totalPages && (
+                <PaginationItem>
+                  <PaginationNext onClick={() => handlePageChange(page + 1)} />
+                </PaginationItem>
+              )}
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </section>
   );
 };

@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import {
   Card,
   CardContent,
@@ -10,110 +8,91 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, AlertTriangle, Download, PhoneCall } from "lucide-react";
+import { Download, PhoneCall } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-interface EventProps {
-  id: string;
-  titulo: string;
-  slug: string;
-  descricao: string;
-  img: string;
-  img2?: string;
-  data_ini: string;
-  regulamento?: string;
-  categoria: string;
-  organizador: {
-    nome: string;
-    telefone: string;
-  };
-  categoria_evento?: {
-    id: string;
-    titulo: string;
-    valor_formatado: string;
-    taxa_formatado: string;
-    qtd_limite: string;
-    data_limite: string;
-  }[];
-}
-
-interface FeaturesProps {
-  status?: number;
-}
+import { Skeleton } from "@/components/ui/skeleton";
+import { useFetchEvent } from "@/hooks/useFetchEvent"; // Novo Hook
+import { CategoriaEventoProps, FeaturesProps } from "@/types";
 
 export const EventDetail = ({ status = 2 }: FeaturesProps) => {
   const { slug } = useParams();
-  const [event, setEvent] = useState<EventProps | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const response = await axios.get(
-          `https://sportbro.com.br/api/events_list.php?status=${status}`
-        );
-        const eventoEncontrado = response.data.evento.find(
-          (evento: EventProps) => evento.slug === slug
-        );
+  // Usa o hook personalizado para buscar o evento
+  const {
+    data: event,
+    isLoading,
+    isError,
+    error,
+  } = useFetchEvent({
+    status,
+    slug,
+  });
 
-        if (!eventoEncontrado) {
-          throw new Error("Evento não encontrado");
-        }
+  // Skeleton para carregamento
+  if (isLoading) {
+    return (
+      <section className="container py-24 sm:py-32">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-8 w-3/4 mx-auto" />
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex flex-wrap justify-center gap-4">
+              <Skeleton className="w-full max-w-xs sm:max-w-md h-40 rounded-lg" />
+              <Skeleton className="w-full max-w-xs sm:max-w-md h-40 rounded-lg" />
+            </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Skeleton className="w-40 h-8 rounded-lg" />
+              <Skeleton className="w-60 h-8 rounded-lg" />
+            </div>
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <Skeleton className="w-32 h-10" />
+          </CardFooter>
+        </Card>
+      </section>
+    );
+  }
 
-        setEvent(eventoEncontrado);
-      } catch (err: any) {
-        console.error(err);
-        setError(err.message || "Erro ao carregar o evento");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvent();
-  }, [slug, status]);
-
-  if (loading)
+  // Exibição de erro
+  if (isError) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader2 className="animate-spin w-10 h-10" />
+        <p className="text-red-500">
+          {error?.message || "Erro ao carregar evento!"}
+        </p>
       </div>
     );
+  }
 
-  if (error)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="flex items-center space-x-2 text-red-500">
-          <AlertTriangle />
-          <span>{error}</span>
-        </div>
-      </div>
-    );
-
+  // Conteúdo principal após carregamento
   return (
     <section className="container py-24 sm:py-32">
       <Card>
+        <CardTitle className="text-2xl text-center mt-4">
+          {event?.titulo}
+        </CardTitle>
         <CardHeader>
           <div className="flex flex-wrap justify-center gap-4">
             {event?.img && (
               <img
-                src={`https://sportbro.com.br/sportbro/evento_img/${event.img}`}
+                src={event.img}
                 alt={event?.titulo}
                 className="w-full max-w-xs sm:max-w-md rounded-lg"
               />
             )}
             {event?.img2 && (
               <img
-                src={`https://sportbro.com.br/sportbro/evento_img/${event.img2}`}
+                src={event.img2}
                 alt={`${event?.titulo} - Extra`}
                 className="w-full max-w-xs sm:max-w-md rounded-lg"
               />
             )}
           </div>
-          <CardTitle className="text-2xl text-center mt-4">
-            {event?.titulo}
-          </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-6">
@@ -135,9 +114,10 @@ export const EventDetail = ({ status = 2 }: FeaturesProps) => {
             <PhoneCall className="h-4 w-4" />
             <AlertTitle>Organizador</AlertTitle>
             <AlertDescription>
-              <p>{event?.organizador.nome || "--"}</p>
+              <p>{event?.organizador?.nome || "--"}</p>
               <p>
-                <strong>Telefone:</strong> {event?.organizador.telefone || "--"}
+                <strong>Telefone:</strong>{" "}
+                {event?.organizador?.telefone || "--"}
               </p>
             </AlertDescription>
           </Alert>
@@ -155,33 +135,35 @@ export const EventDetail = ({ status = 2 }: FeaturesProps) => {
             </div>
           )}
 
-          {event?.categoria_evento && event.categoria_evento.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-center">
-                Categorias do Evento
-              </h3>
-              <ul className="space-y-4">
-                {event.categoria_evento.map((cat) => (
-                  <li
-                    key={cat.id}
-                    className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-500 rounded-lg gap-4"
-                  >
-                    <div className="text-white text-center sm:text-left">
-                      <p className="text-lg font-semibold">{cat.titulo}</p>
-                    </div>
-                    <Badge className="bg-blue-500 text-white w-32 h-10 flex items-center justify-center">
-                      Valor: R$ {cat.valor_formatado}
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
+          {event?.categoria_evento &&
+            event.categoria_evento.length > 0 &&
+            !event.hasLinkExterno && (
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-center">
+                  Categorias do Evento
+                </h3>
+                <ul className="space-y-4">
+                  {event.categoria_evento.map((cat: CategoriaEventoProps) => (
+                    <li
+                      key={cat.id}
+                      className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-500 rounded-lg gap-4"
+                    >
+                      <div className="text-white text-center sm:text-left">
+                        <p className="text-lg font-semibold">{cat.titulo}</p>
+                      </div>
+                      <Badge className="bg-blue-500 text-white w-32 h-10 flex items-center justify-center">
+                        Valor: R$ {cat.valor_formatado}
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
 
-              <p className="text-sm text-gray-400 text-center mt-4">
-                Consulte as <strong>taxas aplicáveis</strong> no processo de
-                inscrição para garantir total transparência.
-              </p>
-            </div>
-          )}
+                <p className="text-sm text-gray-400 text-center mt-4">
+                  Consulte as <strong>taxas aplicáveis</strong> no processo de
+                  inscrição para garantir total transparência.
+                </p>
+              </div>
+            )}
         </CardContent>
 
         <CardFooter className="flex justify-center">

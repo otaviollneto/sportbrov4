@@ -13,11 +13,13 @@ import ResultadoDetalhado from "./pages/ResultadoDetalhado";
 import Politica from "./pages/Politica";
 import Termos from "./pages/Termos";
 import Sobre from "./pages/Sobre";
+import Login from "./pages/Login";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/home" element={<Home />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/politica-privacidade" element={<Politica />} />
       <Route path="/termos-de-compra" element={<Termos />} />
       <Route path="/sobre-nos" element={<Sobre />} />

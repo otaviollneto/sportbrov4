@@ -99,7 +99,7 @@ export const Navbar = () => {
                   ))}
                   <a
                     rel="noreferrer noopener"
-                    href="#"
+                    href="/login"
                     className={`w-[110px] border ${buttonVariants({
                       variant: "secondary",
                     })}`}
@@ -132,7 +132,6 @@ export const Navbar = () => {
             <a
               rel="noreferrer noopener"
               href="/login"
-              target="_blank"
               className={`border ${buttonVariants({ variant: "secondary" })}`}
             >
               Login

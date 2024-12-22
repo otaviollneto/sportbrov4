@@ -1,6 +1,4 @@
-import { Button } from "./ui/button";
 import { buttonVariants } from "./ui/button";
-//import { HeroCards } from "./HeroCards";
 import { FileTextIcon } from "@radix-ui/react-icons";
 
 export const Hero = () => {
@@ -30,12 +28,13 @@ export const Hero = () => {
         </p>
 
         <div className="space-y-4 md:space-y-0 md:space-x-4">
-          <Button className="w-full md:w-1/3">Começar</Button>
+          <a href="#features" className="w-full md:w-1/3">
+            Começar
+          </a>
 
           <a
             rel="noreferrer noopener"
-            href="https://github.com/leoMirandaa/shadcn-landing-page.git"
-            target="_blank"
+            href="/resultados"
             className={`w-full md:w-1/3 ${buttonVariants({
               variant: "outline",
             })}`}
