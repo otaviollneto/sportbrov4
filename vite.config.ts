@@ -4,17 +4,22 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  base: "/",
+  build: {
+    outDir: "dist",
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
+    host: true,
     proxy: {
       "/api": {
         target: "https://sportbro.com.br",
         changeOrigin: true,
-        secure: false, // Aceita certificados SSL autoassinados
+        secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
