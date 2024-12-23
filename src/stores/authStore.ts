@@ -18,10 +18,10 @@ const encryptData = (data: string) => {
 };
 
 // Função para descriptografar dados
-const decryptData = (encryptedData: string) => {
-  const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
-  return bytes.toString(CryptoJS.enc.Utf8);
-};
+// const decryptData = (encryptedData: string) => {
+//   const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+//   return bytes.toString(CryptoJS.enc.Utf8);
+// };
 
 // Estado global Zustand
 export const useAuthStore = create<AuthState>((set) => ({
