@@ -70,7 +70,7 @@ export const Register = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [states, setStates] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
+  const [_cities, setCities] = useState<string[]>([]);
 
   console.log(states);
 
