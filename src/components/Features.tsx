@@ -40,7 +40,7 @@ export const Features = ({ status = 2 }: FeaturesProps) => {
 
   // Navegar para a página do evento
   const handleNavigate = (slug: string) => {
-    navigate(`/${status === 2 ? "eventos" : "resultados"}/${slug}`);
+    navigate(`/${status === 2 ? "evento" : "resultado"}/${slug}`);
   };
 
   // Skeleton enquanto carrega

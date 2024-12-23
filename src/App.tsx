@@ -13,35 +13,25 @@ import ResultadoDetalhado from "./pages/ResultadoDetalhado";
 import Politica from "./pages/Politica";
 import Termos from "./pages/Termos";
 import Sobre from "./pages/Sobre";
-import Login from "./pages/Login";
+import LoginPage from "./pages/Login";
+import ForgotPasswordPage from "./pages/ForgotPassword";
+import RegisterPage from "./pages/RegisterPage";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+      <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/esqueci-minha-senha" element={<ForgotPasswordPage />} />
+      <Route path="/cadastrar" element={<RegisterPage />} />
       <Route path="/politica-privacidade" element={<Politica />} />
       <Route path="/termos-de-compra" element={<Termos />} />
       <Route path="/sobre-nos" element={<Sobre />} />
-      <Route path="/">
-        <Route index element={<Home />} />
-        <Route path="eventos" handle={{ title: "Eventos" }}>
-          <Route index element={<Eventos />} />
-          <Route
-            path=":slug"
-            handle={{ title: "Detalhes do Evento" }}
-            element={<EventoDetalhado />}
-          />
-        </Route>
-        <Route path="resultados" handle={{ title: "Resultados" }}>
-          <Route index element={<Resultados />} />
-          <Route
-            path=":slug"
-            handle={{ title: "Detalhes do Evento" }}
-            element={<ResultadoDetalhado />}
-          />
-        </Route>
-      </Route>
+      <Route path="/eventos" element={<Eventos />} />
+      <Route path="/evento/:slug" element={<EventoDetalhado />} />
+      <Route path="/resultados" element={<Resultados />} />
+      <Route path="/resultado/:slug" element={<ResultadoDetalhado />} />
     </>
   )
 );

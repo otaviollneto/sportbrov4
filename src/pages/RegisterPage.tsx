@@ -5,13 +5,13 @@ import { Navbar } from "@/components/Navbar";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Services } from "@/components/Services";
 import "./Home.css";
-import { Login } from "@/components/Login";
+import { Register } from "@/components/Register";
 
 function LoginPage() {
   return (
     <>
       <Navbar />
-      <Login />
+      <Register />
       <About />
       <Services />
       <FAQ />

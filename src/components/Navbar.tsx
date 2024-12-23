@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuthStore } from "@/stores/authStore";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -11,7 +12,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buttonVariants } from "./ui/button";
 import { Menu, User } from "lucide-react";
 import { LogoIcon } from "./Icons";
@@ -21,39 +30,30 @@ interface RouteProps {
   label: string;
 }
 
+// Rotas do menu
 const routeList: RouteProps[] = [
-  {
-    href: "home",
-    label: "Principal",
-  },
-  {
-    href: "eventos",
-    label: "Eventos",
-  },
-  {
-    href: "resultados",
-    label: "Resultados",
-  },
-  {
-    href: "servicos",
-    label: "Serviços",
-  },
-  {
-    href: "#faq",
-    label: "FAQ",
-  },
-  {
-    href: "contato",
-    label: "Contato",
-  },
+  { href: "home", label: "Principal" },
+  { href: "eventos", label: "Eventos" },
+  { href: "resultados", label: "Resultados" },
+  { href: "servicos", label: "Serviços" },
+  { href: "#faq", label: "FAQ" },
+  { href: "contato", label: "Contato" },
 ];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  // Zustand - Recupera usuário e funções
+  const { user, token, logout } = useAuthStore();
+
+  // Extrai o primeiro nome do usuário
+  const getFirstName = (name: string) => name.split(" ")[0];
+
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
       <NavigationMenu className="mx-auto">
         <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between ">
+          {/* Logo */}
           <NavigationMenuItem className="font-bold flex">
             <a
               rel="noreferrer noopener"
@@ -65,10 +65,8 @@ export const Navbar = () => {
             </a>
           </NavigationMenuItem>
 
-          {/* mobile */}
+          {/* Mobile */}
           <span className="flex md:hidden">
-            {/* <ModeToggle /> */}
-
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className="px-2">
                 <Menu
@@ -97,22 +95,58 @@ export const Navbar = () => {
                       {label}
                     </a>
                   ))}
-                  <a
-                    rel="noreferrer noopener"
-                    href="/login"
-                    className={`w-[110px] border ${buttonVariants({
-                      variant: "secondary",
-                    })}`}
-                  >
-                    <User className="mr-2 w-5 h-5" />
-                    Login
-                  </a>
+                  {!token ? (
+                    <a
+                      rel="noreferrer noopener"
+                      href="/login"
+                      className={`w-[110px] border ${buttonVariants({
+                        variant: "secondary",
+                      })}`}
+                    >
+                      <User className="mr-2 w-5 h-5" />
+                      Login
+                    </a>
+                  ) : (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="flex items-center gap-2">
+                        <Avatar>
+                          <AvatarImage
+                            src={`https://sportbro.com.br/uploads/${user?.img}`}
+                          />
+                          <AvatarFallback>
+                            {user?.nome
+                              ?.split(" ")
+                              .map((n: string) => n[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        {getFirstName(user.nome)}
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem asChild>
+                          <a href="/meus-dados">Meus Dados</a>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <a href="/meus-eventos">Meus Eventos</a>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => {
+                            logout();
+                            window.location.href = "/login";
+                          }}
+                        >
+                          Sair
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </nav>
               </SheetContent>
             </Sheet>
           </span>
 
-          {/* desktop */}
+          {/* Desktop */}
           <nav className="hidden md:flex gap-2">
             {routeList.map((route: RouteProps, i) => (
               <a
@@ -128,16 +162,51 @@ export const Navbar = () => {
             ))}
           </nav>
 
+          {/* Login/Avatar Desktop */}
           <div className="hidden md:flex gap-2">
-            <a
-              rel="noreferrer noopener"
-              href="/login"
-              className={`border ${buttonVariants({ variant: "secondary" })}`}
-            >
-              Login
-            </a>
-
-            {/* <ModeToggle /> */}
+            {!token ? (
+              <a
+                rel="noreferrer noopener"
+                href="/login"
+                className={`border ${buttonVariants({ variant: "secondary" })}`}
+              >
+                Login
+              </a>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-2">
+                  {getFirstName(user.nome)}
+                  <Avatar>
+                    <AvatarImage
+                      src={`https://sportbro.com.br/uploads/${user?.img}`}
+                    />
+                    <AvatarFallback>
+                      {user?.nome
+                        ?.split(" ")
+                        .map((n: string) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem asChild>
+                    <a href="/meus-dados">Meus Dados</a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href="/meus-eventos">Meus Eventos</a>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      logout();
+                      window.location.href = "/login";
+                    }}
+                  >
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </NavigationMenuList>
       </NavigationMenu>

@@ -13,15 +13,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  server: {
-    host: true,
-    proxy: {
-      "/api": {
-        target: "https://sportbro.com.br",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
-  },
 });

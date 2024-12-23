@@ -5,13 +5,13 @@ import { Navbar } from "@/components/Navbar";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Services } from "@/components/Services";
 import "./Home.css";
-import { Login } from "@/components/Login";
+import { ForgotPassword } from "@/components/ForgotPassword";
 
-function LoginPage() {
+function ForgotPasswordPage() {
   return (
     <>
       <Navbar />
-      <Login />
+      <ForgotPassword />
       <About />
       <Services />
       <FAQ />
@@ -21,4 +21,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default ForgotPasswordPage;

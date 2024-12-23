@@ -1,36 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthStore } from "@/stores/authStore";
+import { useNavigate, Link } from "react-router-dom"; // Navegação
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export const Login = () => {
-  const { login } = useAuthStore();
+  const { login, token } = useAuthStore(); // Recupera o token e login do Zustand
+  const navigate = useNavigate(); // Navegação do React Router
+
+  // Estados
   const [email, setEmail] = useState("cadastro@sportbro.com.br");
   const [password, setPassword] = useState("123456");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Redireciona caso já esteja logado
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
+
+  // Função de login
   const handleLogin = async () => {
     setLoading(true);
     setError(null);
 
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("senha", password);
+
     try {
-      const response = await axios.post(
-        "https://sportbro.com.br/api/auth.php",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios({
+        method: "POST",
+        url: "https://sportbro.com.br/api/auth.php",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.data.success) {
-        login(response.data.user);
+        console.log(response.data.user);
+        login(response.data.user); // Salva o usuário no Zustand criptografado
+        navigate("/"); // Redireciona após o login
       } else {
         setError("Credenciais inválidas!");
       }
     } catch (err) {
+      console.log(err);
       setError("Erro ao realizar login!");
     } finally {
       setLoading(false);
@@ -39,32 +68,61 @@ export const Login = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <div className="w-full max-w-md space-y-8">
-        <h2 className="text-center text-3xl font-bold">Login</h2>
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-center text-3xl font-bold">
+            Acesso do atleta
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {error && (
+            <Alert variant="destructive">
+              <AlertTitle>Erro</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-        {error && (
-          <Alert variant="destructive">
-            <AlertTitle>Erro</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+          <Input
+            placeholder="E-mail"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <Input
-          placeholder="E-mail"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Input
-          placeholder="Senha"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button disabled={loading} onClick={handleLogin} className="w-full">
-          {loading ? "Entrando..." : "Entrar"}
-        </Button>
-      </div>
+          <div className="relative">
+            <Input
+              placeholder="Senha"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-2 top-1/2 -translate-y-1/2"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </Button>
+          </div>
+
+          <div className="flex justify-between text-sm text-muted-foreground">
+            <Link to="/esqueci-minha-senha" className="hover:underline">
+              Esqueceu sua senha?
+            </Link>
+            <Link to="/cadastrar" className="hover:underline">
+              Novo por aqui? Cadastrar
+            </Link>
+          </div>
+        </CardContent>
+
+        <CardFooter className="flex flex-col space-y-4">
+          <Button disabled={loading} onClick={handleLogin} className="w-full">
+            {loading ? <Loader2 className="animate-spin mr-2" /> : "Entrar"}
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

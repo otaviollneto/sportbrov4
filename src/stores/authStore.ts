@@ -1,19 +1,14 @@
 import { create } from "zustand";
 import CryptoJS from "crypto-js";
 
-const SECRET_KEY = "my-secret-key"; // Substitua por uma chave segura
+// Chave secreta (salve no .env e não exponha no código!)
+const SECRET_KEY = import.meta.env.VITE_SECRET_KEY || "default_secret_key";
 
-interface User {
-  id: string;
-  nome: string;
-  img: string;
-  token: string;
-}
-
+// Interface do Zustand
 interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  login: (user: User) => void;
+  user: any | null;
+  token: string | null;
+  login: (user: any) => void;
   logout: () => void;
 }
 
@@ -28,33 +23,25 @@ const decryptData = (encryptedData: string) => {
   return bytes.toString(CryptoJS.enc.Utf8);
 };
 
-// Função para armazenar dados criptografados no LocalStorage
-const saveEncryptedData = (key: string, data: any) => {
-  const encrypted = encryptData(JSON.stringify(data));
-  localStorage.setItem(key, encrypted);
-};
-
-// Função para recuperar dados criptografados do LocalStorage
-const getEncryptedData = (key: string) => {
-  const encrypted = localStorage.getItem(key);
-  if (!encrypted) return null;
-
-  const decrypted = decryptData(encrypted);
-  return JSON.parse(decrypted);
-};
-
-// Zustand Store
+// Estado global Zustand
 export const useAuthStore = create<AuthState>((set) => ({
-  user: getEncryptedData("user"), // Recupera usuário armazenado
-  isAuthenticated: !!getEncryptedData("user"), // Verifica se está autenticado
+  user: null,
+  token: null,
 
-  login: (user: User) => {
-    saveEncryptedData("user", user);
-    set({ user, isAuthenticated: true });
+  // Login: salva token criptografado no localStorage
+  login: (user) => {
+    const encryptedToken = encryptData(user.token);
+    const encryptedUser = encryptData(JSON.stringify(user)); // Criptografa o token
+    localStorage.setItem("user", encryptedUser); // Salva usuário
+    localStorage.setItem("token", encryptedToken); // Salva token criptografado
+
+    set({ user, token: user.token });
   },
 
+  // Logout: remove dados do localStorage
   logout: () => {
     localStorage.removeItem("user");
-    set({ user: null, isAuthenticated: false });
+    localStorage.removeItem("token");
+    set({ user: null, token: null });
   },
 }));
