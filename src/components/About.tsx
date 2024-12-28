@@ -1,5 +1,5 @@
 import { Statistics } from "./Statistics";
-import pilot from "../assets/pilot.png";
+import runner2 from "../assets/runners.webp";
 
 export const About = () => {
   return (
@@ -7,9 +7,9 @@ export const About = () => {
       <div className="bg-muted/50 border rounded-lg py-12">
         <div className="px-6 flex flex-col-reverse md:flex-row gap-8 md:gap-12">
           <img
-            src={pilot}
+            src={runner2}
             alt=""
-            className="w-[300px] object-contain rounded-lg"
+            className="w-[500px] object-contain rounded"
           />
           <div className="bg-green-0 flex flex-col justify-between">
             <div className="pb-6">

@@ -1,6 +1,11 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { MagnifierIcon, WalletIcon, ChartIcon } from "./Icons";
-import cubeLeg from "../assets/cube-leg.png";
+import runners from "../assets/runner3.jpg";
+import {
+  BarChartIcon,
+  ClockIcon,
+  GearIcon,
+  PaperPlaneIcon,
+} from "@radix-ui/react-icons";
 
 interface ServiceProps {
   title: string;
@@ -11,27 +16,23 @@ interface ServiceProps {
 const serviceList: ServiceProps[] = [
   {
     title: "Gestão de Eventos Esportivos",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.",
-    icon: <ChartIcon />,
+    description: "",
+    icon: <BarChartIcon width={24} height={24} />,
   },
   {
     title: "Cronometragem",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.",
-    icon: <WalletIcon />,
+    description: "",
+    icon: <ClockIcon width={24} height={24} />,
   },
   {
     title: "Inscrição Online",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.",
-    icon: <MagnifierIcon />,
+    description: "",
+    icon: <PaperPlaneIcon width={24} height={24} />,
   },
   {
     title: "Equipamento para seu evento",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.",
-    icon: <MagnifierIcon />,
+    description: "",
+    icon: <GearIcon width={24} height={24} />,
   },
 ];
 
@@ -48,8 +49,7 @@ export const Services = () => {
           </h2>
 
           <p className="text-muted-foreground text-xl mt-4 mb-8 ">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis
-            dolor.
+            Conheça as opções de serviços que oferecemos
           </p>
 
           <div className="flex flex-col gap-8">
@@ -72,8 +72,8 @@ export const Services = () => {
         </div>
 
         <img
-          src={cubeLeg}
-          className="w-[300px] md:w-[500px] lg:w-[600px] object-contain"
+          src={runners}
+          className="w-[300px] md:w-[500px] lg:w-[600px] object-contain rounded"
           alt="About services"
         />
       </div>

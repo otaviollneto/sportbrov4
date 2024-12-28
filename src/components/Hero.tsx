@@ -1,5 +1,6 @@
 import { buttonVariants } from "./ui/button";
 import { FileTextIcon } from "@radix-ui/react-icons";
+import runner3 from "../assets/runner2.jpg";
 
 export const Hero = () => {
   return (
@@ -28,7 +29,12 @@ export const Hero = () => {
         </p>
 
         <div className="space-y-4 md:space-y-0 md:space-x-4">
-          <a href="#features" className="w-full md:w-1/3">
+          <a
+            href="#features"
+            className={`w-full md:w-1/3 ${buttonVariants({
+              variant: "default",
+            })}`}
+          >
             Começar
           </a>
 
@@ -46,7 +52,13 @@ export const Hero = () => {
       </div>
 
       {/* Hero cards sections */}
-      <div className="z-10">{/* <HeroCards /> */}</div>
+      <div className="z-10">
+        <img
+          src={runner3}
+          alt=""
+          className="w-[500px] object-contain rounded"
+        />
+      </div>
 
       {/* Shadow effect */}
       <div className="shadow"></div>

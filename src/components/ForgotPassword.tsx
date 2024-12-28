@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 
 export const ForgotPassword = () => {
   // Estados
-  const [email, setEmail] = useState("");
   const [cpf, setCpf] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,14 +29,13 @@ export const ForgotPassword = () => {
 
     // FormData para envio
     const formData = new FormData();
-    formData.append("email", email);
     formData.append("cpf", cpf);
     formData.append("birthDate", birthDate);
 
     try {
       const response = await axios({
         method: "POST",
-        url: "https://sportbro.com.br/api/reset_password.php",
+        url: "https://sportbro.com.br/api/forgot_password.php",
         data: formData,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -92,15 +90,6 @@ export const ForgotPassword = () => {
 
           {/* Campos de formulário */}
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">E-mail</label>
-              <Input
-                placeholder="Digite seu E-mail"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
             <div>
               <label className="block text-sm font-medium mb-1">CPF</label>
               <Input

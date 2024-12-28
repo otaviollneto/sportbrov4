@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import {
   NavigationMenu,
@@ -44,10 +44,20 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // Zustand - Recupera usuário e funções
-  const { user, token, logout } = useAuthStore();
+  const { user, token, logout, loadStoredAuth } = useAuthStore();
+
+  useEffect(() => {
+    loadStoredAuth();
+  }, [loadStoredAuth]);
 
   // Extrai o primeiro nome do usuário
   const getFirstName = (name: string) => name.split(" ")[0];
+
+  // Extrai iniciais para AvatarFallback
+  const getInitials = (name: string) => {
+    const names = name.split(" ");
+    return `${names[0][0]}${names[1] ? names[1][0] : ""}`.toUpperCase();
+  };
 
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
@@ -113,11 +123,8 @@ export const Navbar = () => {
                           <AvatarImage
                             src={`https://sportbro.com.br/uploads/${user?.img}`}
                           />
-                          <AvatarFallback>
-                            {user?.nome
-                              ?.split(" ")
-                              .map((n: string) => n[0])
-                              .join("")}
+                          <AvatarFallback className="bg-gray-300 text-gray-700">
+                            {getInitials(user?.nome)}
                           </AvatarFallback>
                         </Avatar>
                         {getFirstName(user.nome)}
@@ -180,15 +187,12 @@ export const Navbar = () => {
                     <AvatarImage
                       src={`https://sportbro.com.br/uploads/${user?.img}`}
                     />
-                    <AvatarFallback>
-                      {user?.nome
-                        ?.split(" ")
-                        .map((n: string) => n[0])
-                        .join("")}
+                    <AvatarFallback className="bg-gray-300 text-gray-700">
+                      {getInitials(user?.nome)}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="gap-4">
                   <DropdownMenuItem asChild>
                     <a href="/meus-dados">Meus Dados</a>
                   </DropdownMenuItem>

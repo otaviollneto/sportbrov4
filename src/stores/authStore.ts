@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import CryptoJS from "crypto-js";
 
-// Chave secreta (salve no .env e não exponha no código!)
+// Chave secreta (deve ser armazenada em variável de ambiente no .env)
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY || "default_secret_key";
 
 // Interface do Zustand
@@ -10,6 +10,7 @@ interface AuthState {
   token: string | null;
   login: (user: any) => void;
   logout: () => void;
+  loadStoredAuth: () => void; // Nova função para carregar dados salvos
 }
 
 // Função para criptografar dados
@@ -18,10 +19,15 @@ const encryptData = (data: string) => {
 };
 
 // Função para descriptografar dados
-// const decryptData = (encryptedData: string) => {
-//   const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
-//   return bytes.toString(CryptoJS.enc.Utf8);
-// };
+const decryptData = (encryptedData: string) => {
+  try {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  } catch (err) {
+    console.error("Erro ao descriptografar:", err);
+    return null;
+  }
+};
 
 // Estado global Zustand
 export const useAuthStore = create<AuthState>((set) => ({
@@ -31,9 +37,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   // Login: salva token criptografado no localStorage
   login: (user) => {
     const encryptedToken = encryptData(user.token);
-    const encryptedUser = encryptData(JSON.stringify(user)); // Criptografa o token
-    localStorage.setItem("user", encryptedUser); // Salva usuário
-    localStorage.setItem("token", encryptedToken); // Salva token criptografado
+    const encryptedUser = encryptData(JSON.stringify(user)); // Criptografa o usuário
+
+    // Armazena criptografado no localStorage
+    localStorage.setItem("user", encryptedUser);
+    localStorage.setItem("token", encryptedToken);
 
     set({ user, token: user.token });
   },
@@ -43,5 +51,24 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     set({ user: null, token: null });
+  },
+
+  // Carrega dados salvos no localStorage (se disponíveis)
+  loadStoredAuth: () => {
+    try {
+      const encryptedUser = localStorage.getItem("user");
+      const encryptedToken = localStorage.getItem("token");
+
+      if (encryptedUser && encryptedToken) {
+        const decryptedUser = JSON.parse(decryptData(encryptedUser) || "{}");
+        const decryptedToken = decryptData(encryptedToken);
+
+        if (decryptedUser && decryptedToken) {
+          set({ user: decryptedUser, token: decryptedToken });
+        }
+      }
+    } catch (err) {
+      console.error("Erro ao carregar autenticação armazenada:", err);
+    }
   },
 }));
