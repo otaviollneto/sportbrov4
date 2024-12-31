@@ -27,7 +27,7 @@ export const RegisterStep3 = () => {
 
   const isPDC = watch("isPDC");
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: typeof step3Schema._type) => {
     setData(data);
     nextStep();
   };

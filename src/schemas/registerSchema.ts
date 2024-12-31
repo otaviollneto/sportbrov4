@@ -14,9 +14,7 @@ export const step1Schema = z.object({
   sex: z.enum(["Masculino", "Feminino"], {
     required_error: "Selecione o sexo",
   }),
-  birthDate: z
-    .date()
-    .max(today, "Data de nascimento não pode ser maior que hoje"),
+  birthDate: z.string(),
 });
 
 export const step2Schema = z.object({

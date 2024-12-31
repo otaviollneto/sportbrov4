@@ -91,9 +91,11 @@ export const ForgotPassword = () => {
           {/* Campos de formulário */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">CPF</label>
+              <label className="block text-sm font-medium mb-1">
+                CPF ou Passaporte
+              </label>
               <Input
-                placeholder="000.000.000-00"
+                placeholder="CPF ou Passaporte"
                 type="text"
                 value={cpf}
                 onChange={(e) => setCpf(e.target.value)}

@@ -19,8 +19,8 @@ export const Login = () => {
   const navigate = useNavigate(); // Navegação do React Router
 
   // Estados
-  const [email, setEmail] = useState("cadastro@sportbro.com.br");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,9 +52,8 @@ export const Login = () => {
       });
 
       if (response.data.success) {
-        console.log(response.data.user);
-        login(response.data.user); // Salva o usuário no Zustand criptografado
-        navigate("/"); // Redireciona após o login
+        login(response.data.user);
+        navigate("/");
       } else {
         setError("Credenciais inválidas!");
       }
@@ -83,8 +82,8 @@ export const Login = () => {
           )}
 
           <Input
-            placeholder="E-mail"
-            type="email"
+            placeholder="CPF ou Passaporte"
+            type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

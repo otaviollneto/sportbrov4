@@ -18,13 +18,15 @@ export const RegisterStep2 = () => {
     defaultValues: data,
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: typeof step2Schema._type) => {
     setData(data);
     nextStep();
   };
 
   const handleCepSearch = async (cep: string) => {
-    if (cep.length === 8) {
+    const cleanedCep = cep.replace(/\D/g, "");
+
+    if (cleanedCep.length === 8) {
       try {
         const response = await axios.get(
           `https://viacep.com.br/ws/${cep}/json/`

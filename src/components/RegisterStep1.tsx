@@ -11,21 +11,67 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import axios from "axios";
+import { useState } from "react";
 
 export const RegisterStep1 = () => {
   const { nextStep, setData } = useRegisterStore();
+  const [cpfError, setCpfError] = useState<string | null>(null);
   const {
     control,
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(step1Schema),
   });
 
-  const onSubmit = (data: any) => {
+  interface FormData {
+    documentType: string;
+    document: string;
+    name: string;
+    email: string;
+    phone: string;
+    birthDate: string;
+    sex: string;
+  }
+
+  const onSubmit = (data: FormData) => {
     setData(data);
     nextStep();
+  };
+
+  const validateCpf = async (cpf: string) => {
+    try {
+      const response = await axios.post(
+        "https://sportbro.com.br/api/valida_cpf.php",
+        { cpf },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (!response.data.success) {
+        setError("document", {
+          type: "manual",
+          message: response.data.message,
+        });
+        setCpfError(response.data.message);
+      } else {
+        clearErrors("document");
+        setCpfError(null);
+      }
+    } catch (error) {
+      setError("document", {
+        type: "manual",
+        message: "Erro ao validar CPF.",
+      });
+      setCpfError("Erro ao validar CPF.");
+    }
   };
 
   return (
@@ -53,9 +99,15 @@ export const RegisterStep1 = () => {
       </div>
       <div className="flex flex-col">
         <label>Documento*</label>
-        <Input {...register("document")} placeholder="Documento" />
-        {errors.document && (
-          <p className="text-red-500">{String(errors.document.message)}</p>
+        <Input
+          {...register("document")}
+          placeholder="Documento"
+          onBlur={(e) => validateCpf(e.target.value)}
+        />
+        {(errors.document || cpfError) && (
+          <p className="text-red-500">
+            {String(errors.document?.message) || cpfError}
+          </p>
         )}
       </div>
       <div className="flex flex-col">
@@ -84,7 +136,7 @@ export const RegisterStep1 = () => {
         <Input
           type="date"
           {...register("birthDate")}
-          max={new Date().toISOString().split("T")[0]} // Define a data máxima como hoje
+          max={new Date().toISOString().split("T")[0]}
         />
         {errors.birthDate && (
           <p className="text-red-500">{String(errors.birthDate.message)}</p>

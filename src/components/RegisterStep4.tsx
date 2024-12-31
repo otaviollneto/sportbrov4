@@ -13,6 +13,7 @@ export const RegisterStep4 = () => {
   const { prevStep, setData, data } = useRegisterStore();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const {
     register,
@@ -23,13 +24,14 @@ export const RegisterStep4 = () => {
     defaultValues: data,
   });
 
-  const onSubmit = async (dataForm: any) => {
+  const onSubmit = async (dataForm: typeof data) => {
+    setLoading(true);
     setData(dataForm);
     const finalData = { ...data, ...dataForm };
 
     try {
       const response = await axios.post(
-        "https://sportbro.com.br/api/register.php",
+        "https://sportbro.com.br/api/user_register.php",
         finalData,
         {
           headers: {
@@ -42,12 +44,17 @@ export const RegisterStep4 = () => {
         setSuccess("Registro realizado com sucesso!");
         setTimeout(() => {
           navigate("/login");
-        }, 2000); // Redireciona para a página de login após 2 segundos
+        }, 2000);
       } else {
         setError(response.data.message || "Erro ao registrar.");
       }
     } catch (error) {
-      setError("Erro ao registrar: " + (error as any).message);
+      setError(
+        "Erro ao registrar: " +
+          (axios.isAxiosError(error) ? error.message : "Unknown error")
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +67,7 @@ export const RegisterStep4 = () => {
         </Alert>
       )}
       {success && (
-        <Alert variant="default">
+        <Alert variant="success">
           <AlertTitle>Sucesso</AlertTitle>
           <AlertDescription>{success}</AlertDescription>
         </Alert>
@@ -89,7 +96,9 @@ export const RegisterStep4 = () => {
         <Button type="button" onClick={prevStep}>
           Voltar
         </Button>
-        <Button type="submit">Finalizar</Button>
+        <Button type="submit" disabled={loading}>
+          Finalizar
+        </Button>
       </div>
     </form>
   );
