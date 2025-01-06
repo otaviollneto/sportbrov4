@@ -6,9 +6,14 @@ const SECRET_KEY = import.meta.env.VITE_SECRET_KEY || "default_secret_key";
 
 // Interface do Zustand
 interface AuthState {
-  user: any | null;
+  user: { id: string; name: string; email: string; img?: string } | null;
   token: string | null;
-  login: (user: any) => void;
+  login: (user: {
+    id: string;
+    name: string;
+    email: string;
+    token: string;
+  }) => void;
   logout: () => void;
   loadStoredAuth: () => void; // Nova função para carregar dados salvos
 }

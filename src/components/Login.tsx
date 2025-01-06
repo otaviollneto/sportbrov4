@@ -15,8 +15,8 @@ import {
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export const Login = () => {
-  const { login, token } = useAuthStore(); // Recupera o token e login do Zustand
-  const navigate = useNavigate(); // Navegação do React Router
+  const { login, token } = useAuthStore();
+  const navigate = useNavigate();
 
   // Estados
   const [email, setEmail] = useState("");
@@ -25,14 +25,12 @@ export const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Redireciona caso já esteja logado
   useEffect(() => {
     if (token) {
       navigate("/");
     }
   }, [token, navigate]);
 
-  // Função de login
   const handleLogin = async () => {
     setLoading(true);
     setError(null);

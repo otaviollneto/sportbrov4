@@ -18,7 +18,6 @@ import { CategoriaEventoProps, FeaturesProps } from "@/types";
 export const EventDetail = ({ status = 2 }: FeaturesProps) => {
   const { slug } = useParams();
 
-  // Usa o hook personalizado para buscar o evento
   const {
     data: event,
     isLoading,
@@ -29,7 +28,6 @@ export const EventDetail = ({ status = 2 }: FeaturesProps) => {
     slug,
   });
 
-  // Skeleton para carregamento
   if (isLoading) {
     return (
       <section className="container py-24 sm:py-32">

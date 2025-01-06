@@ -17,6 +17,8 @@ import LoginPage from "./pages/Login";
 import ForgotPasswordPage from "./pages/ForgotPassword";
 import RegisterPage from "./pages/RegisterPage";
 import ResetPasswordPage from "./pages/ResetPassword";
+import MyDataPage from "./pages/MyData";
+import MyEventsPage from "./pages/MyEvents";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +29,8 @@ export const router = createBrowserRouter(
       <Route path="/esqueci-minha-senha" element={<ForgotPasswordPage />} />
       <Route path="/reset-senha" element={<ResetPasswordPage />} />
       <Route path="/cadastrar" element={<RegisterPage />} />
+      <Route path="/meus-dados" element={<MyDataPage />} />
+      <Route path="/meus-eventos" element={<MyEventsPage />} />
       <Route path="/politica-privacidade" element={<Politica />} />
       <Route path="/termos-de-compra" element={<Termos />} />
       <Route path="/sobre-nos" element={<Sobre />} />

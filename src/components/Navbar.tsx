@@ -124,10 +124,10 @@ export const Navbar = () => {
                             src={`https://sportbro.com.br/uploads/${user?.img}`}
                           />
                           <AvatarFallback className="bg-gray-300 text-gray-700">
-                            {getInitials(user?.nome)}
+                            {getInitials(user?.name || "")}
                           </AvatarFallback>
                         </Avatar>
-                        {getFirstName(user.nome)}
+                        {getFirstName(user?.name || "")}
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuItem asChild>
@@ -182,13 +182,13 @@ export const Navbar = () => {
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-2">
-                  {getFirstName(user.nome)}
+                  {getFirstName(user?.name || "")}
                   <Avatar>
                     <AvatarImage
                       src={`https://sportbro.com.br/uploads/${user?.img}`}
                     />
                     <AvatarFallback className="bg-gray-300 text-gray-700">
-                      {getInitials(user?.nome)}
+                      {getInitials(user?.name || "")}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>

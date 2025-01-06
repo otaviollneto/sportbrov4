@@ -1,18 +1,5 @@
+import { EventProps, SponsorProps } from "@/types";
 import { File } from "lucide-react";
-
-interface SponsorProps {
-  id: string;
-  link: string;
-  titulo: string;
-}
-
-interface EventProps {
-  lista: {
-    id: string;
-    link: string;
-    titulo: string;
-  }[];
-}
 
 export const DadosResultados = ({ lista }: EventProps) => {
   return (
