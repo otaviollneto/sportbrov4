@@ -138,7 +138,7 @@ export const ResultDetail = ({ status = 3 }: FeaturesProps) => {
 
           {event?.resultado?.hasResult && (
             <div className="mt-8">
-              <DadosResultados lista={event.resultado.lista} />
+              <DadosResultados {...event.resultado} />
             </div>
           )}
         </CardContent>
