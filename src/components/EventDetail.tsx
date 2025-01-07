@@ -108,7 +108,7 @@ export const EventDetail = ({ status = 2 }: FeaturesProps) => {
             {event?.descricao || "Sem descrição disponível."}
           </p>
 
-          <Alert>
+          <Alert className="text-black">
             <PhoneCall className="h-4 w-4" />
             <AlertTitle>Organizador</AlertTitle>
             <AlertDescription>

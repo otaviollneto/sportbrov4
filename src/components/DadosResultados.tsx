@@ -1,7 +1,7 @@
-import { EventProps, SponsorProps } from "@/types";
+import { ResultadoEventoProps, SponsorProps } from "@/types";
 import { File } from "lucide-react";
 
-export const DadosResultados = ({ lista }: EventProps) => {
+export const DadosResultados = ({ lista }: ResultadoEventoProps) => {
   return (
     <section id="sponsors" className="container pt-24 sm:py-32">
       <h2 className="text-center text-md lg:text-xl font-bold mb-8 text-primary">

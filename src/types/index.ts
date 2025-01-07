@@ -7,6 +7,15 @@ export interface CategoriaEventoProps {
   data_limite: string;
 }
 
+export interface ResultadoEventoProps {
+  hasResult: boolean;
+  lista: {
+    id: string;
+    link: string;
+    titulo: string;
+  }[];
+}
+
 export interface EventProps {
   id: string;
   titulo: string;
@@ -23,14 +32,7 @@ export interface EventProps {
     nome: string;
     telefone: string;
   };
-  resultado?: {
-    hasResult: boolean;
-    lista: {
-      id: string;
-      link: string;
-      titulo: string;
-    }[];
-  };
+  resultado?: ResultadoEventoProps;
   categoria_evento?: CategoriaEventoProps[];
 }
 
@@ -120,7 +122,6 @@ export interface EventData {
     parcelamento: string;
     semValidaIdade: string;
     slug: string;
-    responsavel: string;
     cod_pagseguro: string;
   };
   ticket: {
@@ -141,4 +142,5 @@ export interface EventData {
   cod_pagseguro: string;
   tempo_corrida: string;
   tamanho_camiseta: string;
+  responsavel: string;
 }

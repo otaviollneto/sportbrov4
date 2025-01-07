@@ -20,8 +20,6 @@ export const EventsList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(events);
-
   useEffect(() => {
     if (!token) return;
     const fetchEvents = async () => {
@@ -36,8 +34,6 @@ export const EventsList = () => {
             },
           }
         );
-
-        console.log(response.data);
 
         if (response.data.success) {
           setEvents(response.data.data);
@@ -71,21 +67,31 @@ export const EventsList = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {event?.cod_pagseguro && (
-              <p>
-                <strong>Código Pagamento:</strong> {event.cod_pagseguro}
-              </p>
-            )}
-            {event?.event?.responsavel && (
-              <p>
-                <strong>Responsável:</strong> {event.event.responsavel}
-              </p>
-            )}
-            <p>
-              <strong>Categoria:</strong> {event.ticket.titulo}
-            </p>
-            <div className="flex justify-between items-center">
-              <div>
+            <div className="flex flex-col sm:flex-row justify-between items-center">
+              <div className="w-full sm:w-1/3 mb-4 sm:mb-0">
+                {event?.cod_pagseguro && (
+                  <div>
+                    <strong>Código Pagamento:</strong> {event.cod_pagseguro}
+                  </div>
+                )}
+
+                <p>
+                  <strong>Categoria:</strong> {event.ticket.titulo}
+                </p>
+
+                {event?.tamanho_camiseta && (
+                  <div>
+                    <strong>Tamanho Camiseta:</strong> {event.tamanho_camiseta}
+                  </div>
+                )}
+
+                {event?.responsavel && (
+                  <div>
+                    <strong>Responsável:</strong> {event.responsavel}
+                  </div>
+                )}
+              </div>
+              <div className="w-full sm:w-1/3 mb-4 sm:mb-0">
                 <p>
                   <strong>Data:</strong> {event.event.data_ini}
                 </p>
@@ -93,7 +99,7 @@ export const EventsList = () => {
                   <strong>Horário:</strong> {event.event.hora_ini}
                 </p>
               </div>
-              <div className="space-x-2">
+              <div className="w-full sm:w-1/3 space-x-2">
                 {event?.event?.regulamento && (
                   <Button asChild variant="outline">
                     <a

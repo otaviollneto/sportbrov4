@@ -106,12 +106,12 @@ export const ResultDetail = ({ status = 3 }: FeaturesProps) => {
             </Badge>
           </CardDescription>
 
-          <p>
+          <div>
             <strong>Descrição:</strong>{" "}
             {event?.descricao || "Sem descrição disponível."}
-          </p>
+          </div>
 
-          <Alert>
+          <Alert className="text-black">
             <PhoneCall className="h-4 w-4" />
             <AlertTitle>Organizador</AlertTitle>
             <AlertDescription>
